@@ -1,0 +1,29 @@
+﻿@page "/department"
+@inherits DepartmentViewModel
+
+<h3>Department</h3>
+
+@if (departments == null)
+{
+    <p><em>加载中...</em></p>
+}
+else
+{
+    <div class="col-md-12">
+        <table class="table">
+            <tr>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Employee Count</th>
+                <th>操作</th>
+            </tr>
+            @foreach (var item in departments)
+            {
+                <DepartmentItem department="@item"></DepartmentItem>
+            }
+        </table>
+    </div>
+    <div>
+        <a href="/add-department">Add</a>
+    </div>
+}

@@ -1,0 +1,55 @@
+﻿@page "/add-employee/{DepartmentId}"
+@inject IEmployeeService employeeService
+@inject NavigationManager navigationManager
+
+<h3>AddDepartment</h3>
+
+<EditForm Model="@employee" OnValidSubmit="@HandleValidSubmit" class="d-flex flex-column offset-3 col-6">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <div class="input-group mb-3">
+        <div class="input-group-append">
+            <span class="input-group-text">FirstName</span>
+        </div>
+        <InputText type="text" class="form-control" placeholder="Name" @bind-Value="employee.FirstName"/>
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-append">
+            <span class="input-group-text">LastName</span>
+        </div>
+        <InputText type="text" class="form-control" placeholder="Location" @bind-Value="employee.LastName"/>
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-append">
+            <span class="input-group-text">Gender</span>
+        </div>
+        <select class="form-control" @onchange="OnGenderSelected">
+            <option selected hidden disabled>--- 请选择性别 ---</option>
+            @foreach (var item in Enum.GetValues(typeof(Gender)).Cast<Gender>())
+            {
+                <option value="@item">@item.ToString()</option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary align-self-center">Add</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public string DepartmentId { get; set; }
+
+    private ThreegRPCApi.Employee employee = new();
+
+    private void OnGenderSelected(ChangeEventArgs e)
+    {
+        var gender = Enum.Parse(typeof(ThreegRPCApi.Gender), (string)e.Value);
+        employee.Gender = (ThreegRPCApi.Gender)gender;
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        employee.DepartmentId = int.Parse(DepartmentId);
+        await employeeService.Add(employee);
+        navigationManager.NavigateTo($"/employee/{DepartmentId}");
+    }
+}

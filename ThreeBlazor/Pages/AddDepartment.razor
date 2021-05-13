@@ -1,0 +1,39 @@
+﻿@page "/add-department"
+@inject IDepartmentService departmentService
+@inject NavigationManager navigationManager
+
+<h3>AddDepartment</h3>
+
+<EditForm Model="@department" OnValidSubmit="@HandleValidSubmit" class="d-flex flex-column offset-3 col-6">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <div class="input-group mb-3">
+        <div class="input-group-append">
+            <span class="input-group-text">Name</span>
+        </div>
+        <InputText type="text" class="form-control" placeholder="Name" @bind-Value="department.Name"/>
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-append">
+            <span class="input-group-text">Location</span>
+        </div>
+        <InputText type="text" class="form-control" placeholder="Location" @bind-Value="department.Location"/>
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-append">
+            <span class="input-group-text">EmployeeCount</span>
+        </div>
+        <InputNumber type="text" class="form-control" placeholder="EmployeeCount" @bind-Value="department.EmployeeCount"/>
+    </div>
+    <button type="submit" class="btn btn-primary align-self-center">Add</button>
+</EditForm>
+
+@code {
+    private ThreegRPCApi.Department department = new();
+
+    private async Task HandleValidSubmit()
+    {
+        await departmentService.Add(department);
+        navigationManager.NavigateTo("/department");
+    }
+}
